@@ -7,10 +7,6 @@ on:
         description: '以逗号分隔的允许自动合并的用户名列表'
         required: true
         type: string
-      allowed_paths:
-        description: '以逗号分隔的允许自动合并的目录路径列表'
-        required: true
-        type: string
     secrets:
       pat_token:
         description: '具有写入权限的 Personal Access Token'
