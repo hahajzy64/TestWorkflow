@@ -1,9 +1,6 @@
 name: 调用自动合并工作流
 
-on: 
-  pull_request:
-    paths:
-      -'Excel/*'
+on: [pull_request]
 
 jobs:
   call-auto-merge:
