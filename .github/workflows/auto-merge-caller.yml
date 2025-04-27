@@ -1,12 +1,13 @@
 name: 调用自动合并工作流
 
 on: [pull_request_review, pull_request]
+  paths:
+    -'Excel/*'
 
 jobs:
   call-auto-merge:
     uses: ./.github/workflows/auto-merge.yml
     with:
       allowed_users: 'mmxqc, limengyang, hahajzy64'
-      allowed_paths: 'Excel/'
     secrets:
       pat_token: ${{ secrets.PAT_TOKEN }}
