@@ -6,6 +6,6 @@ jobs:
   call-auto-merge:
     uses: ./.github/workflows/auto-merge.yml
     with:
-      allowed_users: 'mmxqc, limengyang, hahajzy64'
+      allowed_users: 'mmxqc,limengyang,hahajzy64'
     secrets:
       pat_token: ${{ secrets.PAT_TOKEN }}
