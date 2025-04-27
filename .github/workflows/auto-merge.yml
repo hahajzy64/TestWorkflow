@@ -28,7 +28,9 @@ jobs:
               break
             fi
           done
-          echo "match=$MATCH" >> $GITHUB_OUTPUT
+          echo "match=$MATCH" >> "$GITHUB_OUTPUT"
+          echo "AUTHOR=${AUTHOR}" >> "$GITHUB_OUTPUT"
+          echo "USERS=${USERS[@]}" >> "$GITHUB_OUTPUT"
 
       - name: 启用自动合并
         if: steps.check-user.outputs.match == 'true'
