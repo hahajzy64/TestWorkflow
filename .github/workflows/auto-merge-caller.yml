@@ -3,7 +3,7 @@ name: 调用自动合并工作流
 on: 
   pull_request:
     paths:
-      -'Excel/*'  
+      -'./Excel/*'  
 
 jobs:
   call-auto-merge:
