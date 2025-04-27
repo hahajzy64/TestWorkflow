@@ -16,6 +16,9 @@ jobs:
   auto-merge:
     runs-on: ubuntu-latest
     steps:
+      - name: 检出仓库代码
+        uses: actions/checkout@v3
+
       - name: 检查 PR 作者是否在允许列表中
         id: check-user
         run: |
