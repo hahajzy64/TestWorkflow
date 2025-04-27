@@ -34,31 +34,9 @@ jobs:
           done
           echo "match=$MATCH" >> $GITHUB_OUTPUT
 
-      - name: 检查更改的文件是否仅限于允许的路径
-        id: check-path
-        run: |
-          git fetch origin ${{ github.event.pull_request.base.ref }}
-          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
-          IFS=',' read -ra PATHS <<< "${{ inputs.allowed_paths }}"
-          MATCH=true
-          for file in $CHANGED_FILES; do
-            FILE_MATCH=false
-            for path in "${PATHS[@]}"; do
-              if [[ "$file" == "$path"* ]]; then
-                FILE_MATCH=true
-                break
-              fi
-            done
-            if [[ "$FILE_MATCH" == "false" ]]; then
-              MATCH=false
-              break
-            fi
-          done
-          echo "match=$MATCH" >> $GITHUB_OUTPUT
-
       - name: 启用自动合并
-        if: steps.check-user.outputs.match == 'true' && steps.check-path.outputs.match == 'true'
+        if: steps.check-user.outputs.match == 'true'
         run: |
-          gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+          gh pr merge ${{ github.event.pull_request.number }} --merge --auto
         env:
           GH_TOKEN: ${{ secrets.pat_token }}
