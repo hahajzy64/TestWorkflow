@@ -24,13 +24,14 @@ jobs:
           MATCH=false
           for user in "${USERS[@]}"; do
             if [[ "$user" == "$AUTHOR" ]]; then
+              echo "Hello, World2222!"
               MATCH=true
               break
             fi
           done
-          echo "match=$MATCH" >> "$GITHUB_OUTPUT"
-          echo "AUTHOR=${AUTHOR}" >> "$GITHUB_OUTPUT"
-          echo "USERS=${USERS[@]}" >> "$GITHUB_OUTPUT"
+          echo "match=$MATCH"
+          echo "AUTHOR=${AUTHOR}"
+          echo "USERS=${USERS[@]}"
 
       - name: 启用自动合并
         if: steps.check-user.outputs.match == 'true'
