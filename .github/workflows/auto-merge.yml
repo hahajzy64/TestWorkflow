@@ -1,0 +1,64 @@
+name: Auto Merge PRs
+
+on:
+  workflow_call:
+    inputs:
+      allowed_users:
+        description: '以逗号分隔的允许自动合并的用户名列表'
+        required: true
+        type: string
+      allowed_paths:
+        description: '以逗号分隔的允许自动合并的目录路径列表'
+        required: true
+        type: string
+    secrets:
+      pat_token:
+        description: '具有写入权限的 Personal Access Token'
+        required: true
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检查 PR 作者是否在允许列表中
+        id: check-user
+        run: |
+          IFS=',' read -ra USERS <<< "${{ inputs.allowed_users }}"
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          MATCH=false
+          for user in "${USERS[@]}"; do
+            if [[ "$user" == "$AUTHOR" ]]; then
+              MATCH=true
+              break
+            fi
+          done
+          echo "match=$MATCH" >> $GITHUB_OUTPUT
+
+      - name: 检查更改的文件是否仅限于允许的路径
+        id: check-path
+        run: |
+          git fetch origin ${{ github.event.pull_request.base.ref }}
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.event.pull_request.base.ref }}...HEAD)
+          IFS=',' read -ra PATHS <<< "${{ inputs.allowed_paths }}"
+          MATCH=true
+          for file in $CHANGED_FILES; do
+            FILE_MATCH=false
+            for path in "${PATHS[@]}"; do
+              if [[ "$file" == "$path"* ]]; then
+                FILE_MATCH=true
+                break
+              fi
+            done
+            if [[ "$FILE_MATCH" == "false" ]]; then
+              MATCH=false
+              break
+            fi
+          done
+          echo "match=$MATCH" >> $GITHUB_OUTPUT
+
+      - name: 启用自动合并
+        if: steps.check-user.outputs.match == 'true' && steps.check-path.outputs.match == 'true'
+        run: |
+          gh pr merge ${{ github.event.pull_request.number }} --auto --squash
+        env:
+          GH_TOKEN: ${{ secrets.pat_token }}
