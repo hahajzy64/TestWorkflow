@@ -37,8 +37,8 @@ jobs:
         run: |
           echo "AUTHOR=${{ github.event.pull_request.user.login }}"
           echo "USERS=${{ inputs.allowed_users }}"
-          echo "MATCH=${{ steps.check-user.outputs.match }}"
-          echo "MATCH=${{ steps.check-user.outputs.match == 'true' }}"
+          echo "MATCH=${{ steps.check-user.outputs.MATCH }}"
+          echo "MATCH=${{ steps.check-user.match == 'true' }}"
           echo "token=${{ secrets.pat_token }}"
 
       - name: 启用自动合并
