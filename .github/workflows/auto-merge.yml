@@ -36,6 +36,8 @@ jobs:
       - name: 启用自动合并
         if: steps.check-user.outputs.match == 'true'
         run: |
+          echo "Hello, Worl33333!"
+          echo "$github.event.pull_request.number"
           gh pr merge ${{ github.event.pull_request.number }} --merge --auto
         env:
           GH_TOKEN: ${{ secrets.pat_token }}
